@@ -22,9 +22,10 @@ const LOGIN = gql`
     }
   }
 `;
-
+const LOCAL_ADDRESS = "localhost";
+const PORT = "3001";
 const client = new ApolloClient({
-  link: new HttpLink({ uri: "http://localhost:3001/graphql" }),
+  link: new HttpLink({ uri: `http://${LOCAL_ADDRESS}:${PORT}/graphql` }),
   cache: new InMemoryCache(),
 });
 
@@ -40,14 +41,17 @@ function LoginForm({
     try {
       const { data } = await client.query({
         query: LOGIN,
-        variables: { username, password },
+        variables: { username: "username", password: "password" },
       });
-      console.log({uuid: data.login.uuid, token: data.login.token.accessToken})
+      console.log({
+        uuid: data.login.uuid,
+        token: data.login.token.accessToken,
+      });
       if (data.login.uuid && data.login.token.accessToken) {
         onLogin(data.login.uuid, data.login.token.accessToken);
       }
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
   };
 
@@ -83,6 +87,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     padding: 8,
+    color: "white",
   },
 });
 
